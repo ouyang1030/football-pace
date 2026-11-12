@@ -1,8 +1,10 @@
 # football-pace
 
 Repo for two studies of **Pace of Play (PoP)** in elite international football. Both use StatsBomb
-open event data with 360 freeze frames from six tournaments: UEFA Euro 2020 and 2024, FIFA World
-Cup 2022, UEFA Women's Euro 2022 and 2025, and FIFA Women's World Cup 2023.
+open event data. Paper [2] uses events and 360 freeze frames from six tournaments: UEFA Euro 2020
+and 2024, FIFA World Cup 2022, UEFA Women's Euro 2022 and 2025, and FIFA Women's World Cup 2023.
+Paper [1] uses the four women's tournaments from 2019 to 2025: FIFA Women's World Cup 2019 and 2023,
+and UEFA Women's Euro 2022 and 2025.
 
 ## Notebooks
 
@@ -10,27 +12,30 @@ Run notebooks 1-4 in order, from inside that folder.
 
 | Notebook                                  | What it does                                                                                                                                                                                                                                        | Paper |
 | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
-| `1-load-and-convert-statsbomb-data.ipynb` | Downloads the StatsBomb open data (events + 360 frames) with socceraction's `StatsBombLoader` and saves each match to HDF5                                                                                                                          | [1]   |
-| `2-Pace-of-Play-index.ipynb`              | Computes the possession-level PoP variables and the four baseline metrics (Table 1), standardises them, runs the EFA item screening and builds the Horst-weighted Pace of Play Index (PPI). Outputs Figures 1–2, Fig. S2 and Tables S4–S6           | [2]   |
-| `3-build-pace-model-analysis.ipynb`       | Tests how sensitive the PPI is to the weighting rule (Table S1), compares counter vs regular play against the baselines (Table S2), estimates sex differences with mixed models, splits PPI differences into item contributions, and draws Figure 3 | [2]   |
-| `4-tactical-clustering.ipynb`             | Derives pace states: compares clustering methods (Table S3), fits K-means with K = 2, bootstraps the boundary (Fig. S1), and outputs Figure 4 and the pace-state profile with Youden cut-points (Table 2)                                           | [2]   |
+| `1-load-and-convert-statsbomb-data.ipynb` | Downloads the StatsBomb open data (events + 360 frames) with socceraction's `StatsBombLoader` and saves each match to HDF5. Then computes four established PoP metrics for the women's tournaments 2019–2025 and fits the mixed models of the conference paper (Table 1, Figure 1, trends by metric) | [1]   |
+| `2-Pace-of-Play-index.ipynb`              | Computes the possession-level PoP variables and the four baseline metrics (Table 1), standardises them, runs the EFA item screening and builds the Horst-weighted Pace of Play Index (PPI). Outputs Figure 1, Fig. S1 and Tables S4–S6 | [2]   |
+| `3-build-pace-model-analysis.ipynb`       | Tests how sensitive the PPI is to the weighting rule (Table S1), compares counter vs regular play against the baselines (Table S2), estimates sex differences with mixed models, splits PPI differences into item contributions, and draws Figure 2 | [2]   |
+| `4-tactical-clustering.ipynb`             | Derives pace states: compares clustering methods (Table S3), fits K-means with K = 2, bootstraps the boundary (95% CI), and outputs Figure 3, the pace-state profile with Youden cut-points (Table 2) and the EURO 2024 final case example (Figure 4) | [2]   |
 
 ## Data and outputs
 
 The data are not included in this repository. They are freely available from Hudl StatsBomb at
 <https://github.com/hudl/open-data>.
 
-- Notebook 1 writes the raw match data to `data/men-statsbomb.h5` and `data/women-statsbomb3.h5`.
-  Run it once per sex: select the men's or the women's competitions and set the matching output
-  file.
+- Notebook 1 writes the raw match data to `data/men-statsbomb.h5` and `data/women-statsbomb3.h5`
+  (used by notebooks 2–4), and to `data/women-statsbomb4.h5` (the four women's tournaments of [1]).
+  Files that already exist are skipped. Set `OVERWRITE = True` to download them again.
 - Notebook 2 writes `data/ppi-features.h5`, which contains three tables:
   - `features`: every possession, with all variables
   - `ppi`: the 39,995 analysed possessions, with the nine PPI items and the PPI itself
   - `horst_weights`: the item weights
 - Notebook 4 adds the table `pace_states` to the same file.
 - Figures and tables go to `figures/` and are named after the manuscript, e.g. `Figure3_…` or
-  `TableS2_…`.
+  `TableS2_…`. Two figures that are not in the manuscript have no number
+  (`EFA_vs_Horst_by_tournament.png`, `boundary_bootstrap.png`). The outputs of notebook 1 start
+  with `ECSS_`.
 
+Downloading the data in notebook 1 takes about 15 minutes, and its analysis about 2 minutes.
 Notebook 2 takes about 5–10 minutes to run. Notebooks 3 and 4 take a few minutes each.
 
 ## Requirements
